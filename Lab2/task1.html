@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registration form</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      form {
+        width: 60%;
+        height: 400px;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .form-group {
+        margin-bottom: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input[type='text'] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .error {
+        border: 1px solid red;
+      }
+
+      .submit-btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .results {
+        margin-top: 50px;
+        display: none;
+      }
+
+      .results h2 {
+        margin-bottom: 10px;
+      }
+
+      .results p {
+        margin-bottom: 5px;
+      }
+
+      .visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="registrationForm">
+      <div class="form-group">
+        <label for="fullName">ПІБ</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          placeholder="Прізвище І.О."
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="idCard">ID-картка</label>
+        <input type="text" id="idCard" name="idCard" placeholder="№123456" />
+      </div>
+
+      <div class="form-group">
+        <label for="faculty">Факультет</label>
+        <input type="text" id="faculty" name="faculty" placeholder="ФІОТ" />
+      </div>
+
+      <div class="form-group">
+        <label for="birthDate">Дата народження</label>
+        <input
+          type="text"
+          id="birthDate"
+          name="birthDate"
+          placeholder="ДД.ММ.РРРР"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="address">Адреса</label>
+        <input type="text" id="address" name="address" placeholder="м. Назва" />
+      </div>
+
+      <button type="submit" class="submit-btn">Зареєструватися</button>
+
+      <div id="results" class="results">
+        <h2>Введені дані</h2>
+
+        <b>ПІБ:</b>
+        <p id="fullNameResult"></p>
+
+        <b>ID-картка:</b>
+        <p id="idCardResult"></p>
+
+        <b>Факультет:</b>
+        <p id="facultyResult"></p>
+
+        <b>Дата народження:</b>
+        <p id="birthDateResult"></p>
+
+        <b>Адреса:</b>
+        <p id="addressResult"></p>
+      </div>
+    </form>
+
+    <script>
+      const form = document.getElementById('registrationForm');
+
+      const fullNameInput = document.getElementById('fullName');
+      const idCardInput = document.getElementById('idCard');
+      const facultyInput = document.getElementById('faculty');
+      const birthDateInput = document.getElementById('birthDate');
+      const addressInput = document.getElementById('address');
+
+      const resultsContainer = document.getElementById('results');
+      const fullNameResult = document.getElementById('fullNameResult');
+      const idCardResult = document.getElementById('idCardResult');
+      const facultyResult = document.getElementById('facultyResult');
+      const birthDateResult = document.getElementById('birthDateResult');
+      const addressResult = document.getElementById('addressResult');
+
+      const fullNameExpression =
+        /^[А-ЯҐЄІЇ][а-яґєії]+ [А-ЯҐЄІЇ]\. [А-ЯҐЄІЇ]\.$/;
+      const idCardExpression = /^\u2116\d{6}$/;
+      const facultyExpression = /^[А-ЯҐЄІЇ]{4}$/;
+      const birthDateExpression = /^\d{2}\.\d{2}\.\d{4}$/;
+      const addressExpression = /^м\. [А-ЯҐЄІЇ][а-яґєії]+$/;
+
+      const addClassIfNotExist = (el, className) =>
+        !el.classList.contains(className) && el.classList.add(className);
+
+      const raiseError = (el) => addClassIfNotExist(el.parentElement, 'error');
+      const removeError = (el) => el.parentElement.classList.remove('error');
+
+      const considerElement = (el, expression) =>
+        expression.test(el.value) ? removeError(el) : raiseError(el);
+
+      const hideResults = () => resultsContainer.classList.remove('visible');
+
+      const displayResults = () => {
+        if (form.getElementsByClassName('error').length > 0) {
+          hideResults();
+          return;
+        }
+
+        addClassIfNotExist(resultsContainer, 'visible');
+
+        fullNameResult.textContent = fullNameInput.value;
+        idCardResult.textContent = idCardInput.value;
+        facultyResult.textContent = facultyInput.value;
+        birthDateResult.textContent = birthDateInput.value;
+        addressResult.textContent = addressInput.value;
+      };
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        considerElement(fullNameInput, fullNameExpression);
+        considerElement(idCardInput, idCardExpression);
+        considerElement(facultyInput, facultyExpression);
+        considerElement(birthDateInput, birthDateExpression);
+        considerElement(addressInput, addressExpression);
+
+        displayResults();
+      });
+    </script>
+  </body>
+</html>

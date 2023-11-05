@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Users from RandomUser API</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 20px;
+        gap: 25px;
+      }
+
+      .card {
+        margin: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.075);
+        border-radius: 11px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-header {
+        height: 250px;
+      }
+
+      .card img {
+        height: 100%;
+        width: 100%;
+      }
+
+      .card-content {
+        padding: 20px;
+        background: #f9f9f9;
+      }
+
+      .card-content p {
+        margin: 10px 0;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="userCards" class="card-container"></div>
+
+    <script>
+      const usersContainer = document.querySelector('div');
+
+      const createUserMarkup = ({
+        picture: { large: picture },
+        location: { country, city, postcode },
+        email,
+      }) => `
+        <div class="card">
+          <div class="card-header">
+            <img src="${picture}" alt="User image">
+          </div>
+
+          <div class="card-content">
+            <p>Country: ${country}</p>
+            <p>City: ${city}</p>
+            <p>Postcode: ${postcode}</p>
+            <p>Email: ${email}</p>
+          </div>
+        </div>`;
+
+      const createUsersList = ({ results: users }) =>
+        users.map((user) => createUserMarkup(user)).join('');
+
+      fetch('https://randomuser.me/api/?results=10')
+        .then((response) => response.json())
+        .then((data) => (usersContainer.innerHTML = createUsersList(data)))
+        .catch((error) => console.error('Error:', error));
+    </script>
+  </body>
+</html>

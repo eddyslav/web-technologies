@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>6x6 table</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        flex-direction: column;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin: 10px;
+      }
+
+      td {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #000;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      input[type='color'] {
+        margin: 10px;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <table></table>
+
+    <input type="color" />
+
+    <script>
+      const table = document.querySelector('table');
+      const colorPicker = document.querySelector('input');
+
+      const colorGenerationNumbers = '0123456789ABCDEF';
+
+      const getSelectedColor = () => colorPicker.value;
+
+      const getRandomColor = () =>
+        `#${new Array(6)
+          .fill(0)
+          .map((_) => colorGenerationNumbers[Math.floor(Math.random() * 16)])
+          .join('')}`;
+
+      function handleColMouseOver() {
+        this.style.backgroundColor = getRandomColor();
+      }
+
+      function handleColClick() {
+        this.style.backgroundColor = getSelectedColor();
+      }
+
+      function handleColDblClick() {
+        const columnIndex = this.cellIndex;
+
+        for (let i = this.parentNode.rowIndex; i < table.rows.length; i += 2) {
+          table.rows[i].cells[columnIndex].style.backgroundColor =
+            getSelectedColor();
+        }
+      }
+
+      function createTable(rows, cols) {
+        let count = 1;
+
+        for (let rowNum = 0; rowNum < rows; rowNum++) {
+          const row = table.insertRow();
+
+          for (let colNum = 0; colNum < cols; colNum++) {
+            const col = row.insertCell();
+
+            col.textContent = count++;
+            col.onmouseover = handleColMouseOver;
+            col.onclick = handleColClick;
+            col.ondblclick = handleColDblClick;
+          }
+        }
+      }
+
+      createTable(6, 6);
+    </script>
+  </body>
+</html>
